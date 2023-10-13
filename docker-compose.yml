@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  app:
+    container_name: app_api
+    image: myapp_api
+    build: .              #construir la imagen en el directorio actual 
+    ports:
+      - 8080:8080
+    environment:
+      - POSTGRES_USER=liz  #usuario
+      - POSTGRES_PASSWORD=12345 #contraseña
+  db:
+    image: postgres:15.2-alpine3.17  #para base de datos utilizo postgres version alpine (liviana)
+    restart: always
+    environment:
+      - POSTGRES_USER=liz  #usuario
+      - POSTGRES_PASSWORD=12345 #contraseña
+    ports:
+      - '5432:5432' #puerto de postgres 5432
+    volumes:
+      - ./src/test/resources/db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql #ejecuta el archivo inicial sql
+# herramienta de administración de bases de datos                                                       relacionales que proporciona una interfaz de usuario web para gestionar bases de datos.
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
